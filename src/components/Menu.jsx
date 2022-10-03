@@ -3,13 +3,15 @@ import styled from "styled-components";
 import Vtube from "../img/logo/vtube.png";
 import HomeIcon from "@mui/icons-material/Home";
 import SettingsIcon from "@mui/icons-material/Settings";
-import SportsBasketballIcon from "@mui/icons-material/SportsBasketball";
+import SubscriptionsOutlinedIcon from "@mui/icons-material/SubscriptionsOutlined";
+import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 import MovieIcon from "@mui/icons-material/Movie";
 import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SettingsBrightnessOutlinedIcon from "@mui/icons-material/SettingsBrightnessOutlined";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Container = styled.div`
   flex: 1;
@@ -70,6 +72,9 @@ const Title = styled.h2`
 
 const Menu = ({ darkMode, setDarkMode }) => {
   const navigate = useNavigate();
+  const { currentUser } = useSelector((state) => {
+    return state.user;
+  });
   const goSignup = () => {
     console.log("go signup");
     navigate("/signup");
@@ -87,6 +92,21 @@ const Menu = ({ darkMode, setDarkMode }) => {
           <HomeIcon />
           Home
         </Item>
+        <Link to="trends" style={{ textDecoration: "none", color: "inherit" }}>
+          <Item>
+            <ExploreOutlinedIcon />
+            Explore
+          </Item>
+        </Link>
+        <Link
+          to="subscriptions"
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          <Item>
+            <SubscriptionsOutlinedIcon />
+            Subscriptions
+          </Item>
+        </Link>
         <Item>
           <MovieIcon />
           Movies
@@ -104,16 +124,20 @@ const Menu = ({ darkMode, setDarkMode }) => {
           Settings
         </Item>
         <Hr />
-        <Link to="signin" style={{ textDecoration: "none" }}>
-          <Login>
-            Sign in Here
-            <Button>
-              <AccountCircleOutlinedIcon />
-              SIGN IN
-            </Button>
-          </Login>
-        </Link>
-        <Hr />
+        {!currentUser && (
+          <>
+            <Login>
+              Sign in to like videos, comment, and subscribe.
+              <Link to="signin" style={{ textDecoration: "none" }}>
+                <Button>
+                  <AccountCircleOutlinedIcon />
+                  SIGN IN
+                </Button>
+              </Link>
+            </Login>
+            <Hr />
+          </>
+        )}
         <Item onClick={() => setDarkMode(!darkMode)}>
           <SettingsBrightnessOutlinedIcon />
           {darkMode ? "Light" : "Dark"} Mode
