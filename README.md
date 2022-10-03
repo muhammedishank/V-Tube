@@ -23,7 +23,7 @@ The application is built with:
 - MongoDB
 - Express 
 - Firebase
-
+- redux toolkit
 
 In the project directory, you can run:
 
