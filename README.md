@@ -19,9 +19,7 @@ Now you can run `npm start` in the terminal and the application should work.
 
 The application is built with:
 
-- Node.js 
-- MongoDB
-- Express 
+- ReactJS
 - Firebase
 - redux toolkit
 
