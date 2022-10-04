@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { loginFailure, loginStart, loginSuccess } from "../redux/userSlice";
+import { loginFailure, loginStart, loginSuccess, registerFailure, registerStart, registerSuccess } from "../redux/userSlice";
 import { useDispatch } from "react-redux";
 
 const Container = styled.div`
@@ -75,6 +75,19 @@ const SignIn = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    console.log("submit register");
+    dispatch(registerStart());
+    try {
+      const res = await axios.post("/auth/signup", { name,email, password });
+      console.log(res.data);
+      dispatch(registerSuccess(res.data));
+      navigate("/");
+    } catch (err) {
+      dispatch(registerFailure());
+    }
+  };
   const handleLogin = async (e) => {
     e.preventDefault();
     console.log("submit login");
@@ -83,7 +96,7 @@ const SignIn = () => {
       const res = await axios.post("/auth/signin", { name, password });
       console.log(res.data);
       dispatch(loginSuccess(res.data));
-       navigate("/")
+      navigate("/");
     } catch (err) {
       dispatch(loginFailure());
     }
@@ -114,7 +127,7 @@ const SignIn = () => {
           placeholder="password"
           onChange={(e) => setPassword(e.target.value)}
         />
-        <Button>Sign up</Button>
+        <Button onClick={handleRegister}>Sign up</Button>
       </Wrapper>
       <More>
         English(USA)

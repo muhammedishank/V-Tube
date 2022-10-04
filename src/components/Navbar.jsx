@@ -4,8 +4,10 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import VideoCallOutlinedIcon from "@mui/icons-material/VideoCallOutlined";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Upload from "./Upload";
+import { Menu, MenuItem } from "@mui/material";
+import { logout } from "../redux/userSlice";
 
 const Container = styled.div`
   position: sticky;
@@ -69,26 +71,51 @@ const Avatar = styled.img`
   height: 32px;
   border-radius: 50%;
   background-color: #999;
+  cursor: pointer;
 `;
 
 const Navbar = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState(false);
   const [q, setQ] = useState("");
-  const {currentUser}  = useSelector((state) => state.user);
+  const { currentUser } = useSelector((state) => state.user);
+  const onLogout = ()=>{
+    dispatch(logout());
+    console.log("log out");
+  }
   return (
     <>
-    <Container>
-      <Wrapper>
-        <Search>
-          <Input placeholder="Search" />
-          <SearchOutlinedIcon />
-        </Search>
-        {currentUser ? (
+      <Container>
+        <Wrapper>
+          <Search>
+            <Input placeholder="Search" />
+            <SearchOutlinedIcon />
+          </Search>
+          {currentUser ? (
             <User>
               <VideoCallOutlinedIcon onClick={() => setOpen(true)} />
-              <Avatar src={currentUser.img} />
-              {currentUser.name}
+              <Avatar src={currentUser.img} onClick={() => setOpenMenu(true)}/>
+              <Menu
+                id="demo-positioned-menu"
+                aria-labelledby="demo-positioned-button"
+                open={openMenu}
+                onClose={(e) => {
+                  setOpenMenu(false);
+                }}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+              >
+                <MenuItem >{currentUser.name}</MenuItem>
+                <MenuItem onClick={onLogout}>Logout</MenuItem>
+              </Menu>   
             </User>
           ) : (
             <Link to="signin" style={{ textDecoration: "none" }}>
@@ -98,9 +125,9 @@ const Navbar = () => {
               </Button>
             </Link>
           )}
-      </Wrapper>
-    </Container>
-    {open && <Upload setOpen={setOpen} />}
+        </Wrapper>
+      </Container>
+      {open && <Upload setOpen={setOpen} />}
     </>
   );
 };
